@@ -1,0 +1,122 @@
+/* ── Reset & base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f0f2ff;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Inputs & selects ─────────────────────────────────────────────────────── */
+.sl-input,
+.sl-select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #dde3f0;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.sl-input:focus,
+.sl-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.sl-input.error,
+.sl-select.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.sl-input::placeholder { color: #94a3b8; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.sl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
+  white-space: nowrap;
+}
+
+.sl-btn:active { transform: scale(0.97); }
+
+.sl-btn-primary {
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+.sl-btn-primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+}
+
+.sl-btn-success {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+.sl-btn-success:hover {
+  background: linear-gradient(135deg, #059669, #10b981);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+}
+
+.sl-btn-ghost {
+  background: #fff;
+  color: #64748b;
+  border: 1.5px solid #dde3f0;
+}
+.sl-btn-ghost:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sl-btn-edit {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1.5px solid #fde68a;
+}
+.sl-btn-edit:hover {
+  background: #fde68a;
+}
+
+.sl-btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1.5px solid #fecaca;
+}
+.sl-btn-delete:hover {
+  background: #fecaca;
+}
+
+/* ── Item card hover ──────────────────────────────────────────────────────── */
+.sl-item-card {
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.sl-item-card:hover {
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+/* ── Fade-in animation ────────────────────────────────────────────────────── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.sl-item-enter {
+  animation: fadeSlideIn 0.22s ease-out;
+}

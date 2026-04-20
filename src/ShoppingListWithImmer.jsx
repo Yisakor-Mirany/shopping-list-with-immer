@@ -8,6 +8,18 @@ import { useImmer } from 'use-immer';
 
 const CATEGORIES = ['Produce', 'Dairy', 'Bakery', 'Meat', 'Frozen', 'Beverages', 'Snacks', 'Other'];
 
+// Color accent per category — drives the left border and badge color on each item
+const CATEGORY_COLORS = {
+  Produce:   { border: '#22c55e', bg: '#dcfce7', text: '#15803d' },
+  Dairy:     { border: '#3b82f6', bg: '#dbeafe', text: '#1d4ed8' },
+  Bakery:    { border: '#f59e0b', bg: '#fef3c7', text: '#b45309' },
+  Meat:      { border: '#ef4444', bg: '#fee2e2', text: '#b91c1c' },
+  Frozen:    { border: '#06b6d4', bg: '#cffafe', text: '#0e7490' },
+  Beverages: { border: '#a855f7', bg: '#f3e8ff', text: '#7e22ce' },
+  Snacks:    { border: '#f97316', bg: '#ffedd5', text: '#c2410c' },
+  Other:     { border: '#94a3b8', bg: '#f1f5f9', text: '#475569' },
+};
+
 const EMPTY_FORM = {
   name: '',
   quantity: '',
@@ -17,211 +29,221 @@ const EMPTY_FORM = {
 
 // ─── styles ──────────────────────────────────────────────────────────────────
 
-const styles = {
-  app: {
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: 760,
+const s = {
+  page: {
+    maxWidth: 740,
     margin: '0 auto',
-    padding: '24px 16px',
-    backgroundColor: '#f0f4f8',
+    padding: '32px 16px 48px',
     minHeight: '100vh',
   },
+
+  // ── Header
   header: {
+    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+    borderRadius: 20,
+    padding: '36px 32px',
+    marginBottom: 28,
     textAlign: 'center',
-    marginBottom: 32,
+    boxShadow: '0 8px 32px rgba(79,70,229,0.3)',
+    position: 'relative',
+    overflow: 'hidden',
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: '#1a202c',
+  headerGlow: {
+    position: 'absolute',
+    top: -40,
+    right: -40,
+    width: 180,
+    height: 180,
+    borderRadius: '50%',
+    background: 'rgba(255,255,255,0.08)',
+    pointerEvents: 'none',
+  },
+  headerGlow2: {
+    position: 'absolute',
+    bottom: -50,
+    left: -30,
+    width: 140,
+    height: 140,
+    borderRadius: '50%',
+    background: 'rgba(255,255,255,0.06)',
+    pointerEvents: 'none',
+  },
+  headerIcon: {
+    fontSize: 42,
+    display: 'block',
+    marginBottom: 8,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 800,
+    color: '#fff',
+    margin: '0 0 6px',
+    letterSpacing: '-0.5px',
+  },
+  headerSub: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.72)',
     margin: 0,
   },
-  subtitle: {
-    fontSize: 14,
-    color: '#718096',
-    marginTop: 6,
-  },
+
+  // ── Cards
   card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 24,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    marginBottom: 24,
+    background: '#fff',
+    borderRadius: 16,
+    padding: '24px 24px',
+    boxShadow: '0 1px 3px rgba(15,23,42,0.06), 0 4px 16px rgba(15,23,42,0.04)',
+    marginBottom: 20,
+  },
+  cardAccent: {
+    borderTop: '3px solid #6366f1',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 600,
-    color: '#2d3748',
-    marginTop: 0,
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottom: '2px solid #e2e8f0',
+    fontSize: 15,
+    fontWeight: 700,
+    color: '#0f172a',
+    margin: '0 0 20px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
   },
+
+  // ── Form
   formGrid: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: 12,
+    gap: 14,
   },
-  formGroupFull: {
-    gridColumn: '1 / -1',
-  },
+  formGroup: {},
   label: {
     display: 'block',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 600,
-    color: '#4a5568',
-    marginBottom: 4,
-  },
-  input: {
-    width: '100%',
-    padding: '8px 12px',
-    borderRadius: 8,
-    border: '1.5px solid #cbd5e0',
-    fontSize: 14,
-    color: '#2d3748',
-    outline: 'none',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.2s',
-  },
-  select: {
-    width: '100%',
-    padding: '8px 12px',
-    borderRadius: 8,
-    border: '1.5px solid #cbd5e0',
-    fontSize: 14,
-    color: '#2d3748',
-    outline: 'none',
-    boxSizing: 'border-box',
-    backgroundColor: '#ffffff',
-  },
-  textarea: {
-    width: '100%',
-    padding: '8px 12px',
-    borderRadius: 8,
-    border: '1.5px solid #cbd5e0',
-    fontSize: 14,
-    color: '#2d3748',
-    outline: 'none',
-    boxSizing: 'border-box',
-    resize: 'vertical',
-    minHeight: 70,
+    color: '#64748b',
+    marginBottom: 5,
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em',
   },
   errorText: {
     fontSize: 12,
-    color: '#e53e3e',
-    marginTop: 3,
+    color: '#ef4444',
+    marginTop: 4,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
   },
   buttonRow: {
     display: 'flex',
     gap: 8,
-    marginTop: 16,
+    marginTop: 20,
   },
-  btnPrimary: {
-    padding: '9px 20px',
-    borderRadius: 8,
-    border: 'none',
-    backgroundColor: '#4299e1',
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: 'pointer',
-  },
-  btnSuccess: {
-    padding: '9px 20px',
-    borderRadius: 8,
-    border: 'none',
-    backgroundColor: '#48bb78',
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: 'pointer',
-  },
-  btnSecondary: {
-    padding: '9px 20px',
-    borderRadius: 8,
-    border: '1.5px solid #cbd5e0',
-    backgroundColor: '#ffffff',
-    color: '#4a5568',
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: 'pointer',
-  },
-  emptyState: {
-    textAlign: 'center',
-    color: '#a0aec0',
-    padding: '32px 0',
-    fontSize: 15,
-  },
-  itemCard: {
-    border: '1.5px solid #e2e8f0',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 12,
+
+  // ── List header row
+  listHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundColor: '#f7fafc',
-    transition: 'box-shadow 0.2s',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  listCount: {
+    background: '#6366f1',
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 700,
+    padding: '3px 10px',
+    borderRadius: 99,
+  },
+
+  // ── Item card
+  itemCard: {
+    borderRadius: 12,
+    padding: '14px 16px',
+    marginBottom: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    background: '#fff',
+    border: '1.5px solid #f1f5f9',
+    borderLeft: '4px solid #94a3b8',
+    boxShadow: '0 1px 4px rgba(15,23,42,0.04)',
   },
   itemCardEditing: {
-    border: '1.5px solid #4299e1',
-    backgroundColor: '#ebf8ff',
+    border: '1.5px solid #6366f1',
+    borderLeft: '4px solid #6366f1',
+    background: '#fafafe',
+    boxShadow: '0 0 0 3px rgba(99,102,241,0.1)',
   },
-  itemInfo: {
+  itemLeft: {
     flex: 1,
+    minWidth: 0,
   },
   itemName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 700,
-    color: '#2d3748',
-    margin: '0 0 4px',
+    color: '#0f172a',
+    margin: '0 0 6px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
-  itemMeta: {
-    fontSize: 13,
-    color: '#718096',
-    margin: '2px 0',
+  itemMetaRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
   },
   badge: {
-    display: 'inline-block',
+    display: 'inline-flex',
+    alignItems: 'center',
     padding: '2px 10px',
     borderRadius: 99,
-    backgroundColor: '#bee3f8',
-    color: '#2b6cb0',
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.03em',
+  },
+  qtyPill: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 3,
     fontSize: 12,
-    fontWeight: 600,
-    marginRight: 8,
+    color: '#64748b',
+    fontWeight: 500,
+  },
+  noteText: {
+    fontSize: 12,
+    color: '#94a3b8',
+    marginTop: 4,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: 360,
   },
   itemActions: {
     display: 'flex',
-    gap: 8,
+    gap: 6,
     flexShrink: 0,
     marginLeft: 12,
   },
-  btnEdit: {
-    padding: '6px 14px',
-    borderRadius: 7,
-    border: 'none',
-    backgroundColor: '#ecc94b',
-    color: '#744210',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
+
+  // ── Empty state
+  emptyState: {
+    textAlign: 'center',
+    padding: '48px 0 32px',
   },
-  btnDelete: {
-    padding: '6px 14px',
-    borderRadius: 7,
-    border: 'none',
-    backgroundColor: '#fc8181',
-    color: '#742a2a',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-  },
-  counter: {
-    fontSize: 13,
-    color: '#718096',
-    textAlign: 'right',
+  emptyIcon: {
+    fontSize: 48,
+    display: 'block',
     marginBottom: 12,
+    opacity: 0.4,
+  },
+  emptyTitle: {
+    fontSize: 15,
+    fontWeight: 600,
+    color: '#94a3b8',
+    marginBottom: 4,
+  },
+  emptyDesc: {
+    fontSize: 13,
+    color: '#cbd5e1',
   },
 };
 
@@ -236,19 +258,16 @@ export default function ShoppingListWithImmer() {
   // Regular useState is fine for ephemeral UI state like form values.
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
-  const [editingId, setEditingId] = useState(null); // id of item being edited
+  const [editingId, setEditingId] = useState(null);
 
   // ── validation ─────────────────────────────────────────────────────────────
 
   function validate(values) {
     const errs = {};
-    if (!values.name.trim()) {
-      errs.name = 'Name is required.';
-    }
+    if (!values.name.trim()) errs.name = 'Name is required.';
     const qty = Number(values.quantity);
-    if (values.quantity === '' || isNaN(qty) || qty <= 0 || !Number.isInteger(qty)) {
-      errs.quantity = 'Quantity must be a positive whole number.';
-    }
+    if (values.quantity === '' || isNaN(qty) || qty <= 0 || !Number.isInteger(qty))
+      errs.quantity = 'Must be a positive whole number.';
     return errs;
   }
 
@@ -257,10 +276,7 @@ export default function ShoppingListWithImmer() {
   function handleFormChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // Clear the error for the field being edited
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   }
 
   function resetForm() {
@@ -273,28 +289,21 @@ export default function ShoppingListWithImmer() {
 
   function handleAdd() {
     const errs = validate(form);
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
+    if (Object.keys(errs).length) { setErrors(errs); return; }
 
-    // useImmer: we push directly onto the draft array — no spread/concat needed.
+    // useImmer: push directly onto the draft — no spread/concat needed
     updateItems((draft) => {
       draft.push({
         id: Date.now(),
         name: form.name.trim(),
         quantity: Number(form.quantity),
-        details: {
-          category: form.category,
-          notes: form.notes.trim(),
-        },
+        details: { category: form.category, notes: form.notes.trim() },
       });
     });
-
     resetForm();
   }
 
-  // ── B. Start Editing ───────────────────────────────────────────────────────
+  // ── B. Edit / Save ─────────────────────────────────────────────────────────
 
   function handleEdit(item) {
     setEditingId(item.id);
@@ -307,46 +316,32 @@ export default function ShoppingListWithImmer() {
     setErrors({});
   }
 
-  // ── B. Save Edited Item ────────────────────────────────────────────────────
-
   function handleSave() {
     const errs = validate(form);
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
+    if (Object.keys(errs).length) { setErrors(errs); return; }
 
-    // useImmer: find the item in the draft and mutate its fields directly.
-    // With plain useState you would need to map/spread every level.
+    // useImmer: mutate nested fields directly — no map/spread at every level
     updateItems((draft) => {
       const item = draft.find((i) => i.id === editingId);
       if (item) {
-        item.name = form.name.trim();
-        item.quantity = Number(form.quantity);
-        // Nested update — Immer handles immutability automatically
-        item.details.category = form.category;
-        item.details.notes = form.notes.trim();
+        item.name              = form.name.trim();
+        item.quantity          = Number(form.quantity);
+        item.details.category  = form.category;   // nested — Immer handles it
+        item.details.notes     = form.notes.trim();
       }
     });
-
     resetForm();
   }
 
-  // ── C. Remove Item ─────────────────────────────────────────────────────────
+  // ── C. Delete Item ─────────────────────────────────────────────────────────
 
   function handleDelete(id) {
-    // useImmer: splice the draft array directly — no filter/spread needed.
+    // useImmer: splice draft directly — no filter/spread needed
     updateItems((draft) => {
-      const index = draft.findIndex((i) => i.id === id);
-      if (index !== -1) {
-        draft.splice(index, 1);
-      }
+      const idx = draft.findIndex((i) => i.id === id);
+      if (idx !== -1) draft.splice(idx, 1);
     });
-
-    // If we were editing the deleted item, reset the form
-    if (editingId === id) {
-      resetForm();
-    }
+    if (editingId === id) resetForm();
   }
 
   // ── render ─────────────────────────────────────────────────────────────────
@@ -354,58 +349,62 @@ export default function ShoppingListWithImmer() {
   const isEditing = editingId !== null;
 
   return (
-    <div style={styles.app}>
-      {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>🛒 Shopping List</h1>
-        <p style={styles.subtitle}>State management powered by useImmer</p>
+    <div style={s.page}>
+
+      {/* ── Hero Header ──────────────────────────────────────────────────── */}
+      <div style={s.header}>
+        <div style={s.headerGlow} />
+        <div style={s.headerGlow2} />
+        <span style={s.headerIcon}>🛒</span>
+        <h1 style={s.headerTitle}>Shopping List</h1>
+        <p style={s.headerSub}>Nested state made simple with useImmer</p>
       </div>
 
-      {/* ── Form Section ─────────────────────────────────────────────────── */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>
-          {isEditing ? '✏️ Edit Item' : '➕ Add New Item'}
+      {/* ── Form Card ────────────────────────────────────────────────────── */}
+      <div style={{ ...s.card, ...s.cardAccent }}>
+        <h2 style={s.sectionTitle}>
+          {isEditing ? <>✏️ Edit Item</> : <>➕ New Item</>}
         </h2>
 
-        <div style={styles.formGrid}>
+        <div style={s.formGrid}>
           {/* Name */}
-          <div>
-            <label style={styles.label} htmlFor="name">Item Name</label>
+          <div style={s.formGroup}>
+            <label style={s.label} htmlFor="name">Item Name</label>
             <input
               id="name"
               name="name"
-              style={styles.input}
+              className={`sl-input${errors.name ? ' error' : ''}`}
               type="text"
               placeholder="e.g. Organic Milk"
               value={form.name}
               onChange={handleFormChange}
             />
-            {errors.name && <p style={styles.errorText}>{errors.name}</p>}
+            {errors.name && <p style={s.errorText}>⚠ {errors.name}</p>}
           </div>
 
           {/* Quantity */}
-          <div>
-            <label style={styles.label} htmlFor="quantity">Quantity</label>
+          <div style={s.formGroup}>
+            <label style={s.label} htmlFor="quantity">Quantity</label>
             <input
               id="quantity"
               name="quantity"
-              style={styles.input}
+              className={`sl-input${errors.quantity ? ' error' : ''}`}
               type="number"
               min="1"
               placeholder="e.g. 2"
               value={form.quantity}
               onChange={handleFormChange}
             />
-            {errors.quantity && <p style={styles.errorText}>{errors.quantity}</p>}
+            {errors.quantity && <p style={s.errorText}>⚠ {errors.quantity}</p>}
           </div>
 
           {/* Category */}
-          <div>
-            <label style={styles.label} htmlFor="category">Category</label>
+          <div style={s.formGroup}>
+            <label style={s.label} htmlFor="category">Category</label>
             <select
               id="category"
               name="category"
-              style={styles.select}
+              className="sl-select"
               value={form.category}
               onChange={handleFormChange}
             >
@@ -416,81 +415,109 @@ export default function ShoppingListWithImmer() {
           </div>
 
           {/* Notes */}
-          <div>
-            <label style={styles.label} htmlFor="notes">Notes</label>
+          <div style={s.formGroup}>
+            <label style={s.label} htmlFor="notes">Notes <span style={{ color: '#cbd5e1', fontWeight: 400 }}>(optional)</span></label>
             <input
               id="notes"
               name="notes"
-              style={styles.input}
+              className="sl-input"
               type="text"
-              placeholder="e.g. Low-fat, 2% preferred"
+              placeholder="e.g. Low-fat preferred"
               value={form.notes}
               onChange={handleFormChange}
             />
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div style={styles.buttonRow}>
+        {/* Buttons */}
+        <div style={s.buttonRow}>
           {isEditing ? (
             <>
-              <button style={styles.btnSuccess} onClick={handleSave}>
-                💾 Save
+              <button className="sl-btn sl-btn-success" onClick={handleSave}>
+                💾 Save Changes
               </button>
-              <button style={styles.btnSecondary} onClick={resetForm}>
+              <button className="sl-btn sl-btn-ghost" onClick={resetForm}>
                 ✕ Cancel
               </button>
             </>
           ) : (
-            <button style={styles.btnPrimary} onClick={handleAdd}>
-              + Add Item
+            <button className="sl-btn sl-btn-primary" onClick={handleAdd}>
+              + Add to List
             </button>
           )}
         </div>
       </div>
 
-      {/* ── List Section ─────────────────────────────────────────────────── */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>📋 Shopping List</h2>
-
-        {items.length > 0 && (
-          <p style={styles.counter}>{items.length} item{items.length !== 1 ? 's' : ''}</p>
-        )}
+      {/* ── List Card ────────────────────────────────────────────────────── */}
+      <div style={s.card}>
+        <div style={s.listHeader}>
+          <h2 style={{ ...s.sectionTitle, marginBottom: 0 }}>📋 Your List</h2>
+          {items.length > 0 && (
+            <span style={s.listCount}>
+              {items.length} item{items.length !== 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
 
         {items.length === 0 ? (
-          <div style={styles.emptyState}>
-            <p>Your list is empty.</p>
-            <p>Add your first item using the form above.</p>
+          <div style={s.emptyState}>
+            <span style={s.emptyIcon}>🧺</span>
+            <p style={s.emptyTitle}>Your list is empty</p>
+            <p style={s.emptyDesc}>Add your first item using the form above</p>
           </div>
         ) : (
           items.map((item) => {
             const isThisEditing = item.id === editingId;
+            const color = CATEGORY_COLORS[item.details.category] || CATEGORY_COLORS.Other;
+
             return (
               <div
                 key={item.id}
+                className="sl-item-card sl-item-enter"
                 style={{
-                  ...styles.itemCard,
-                  ...(isThisEditing ? styles.itemCardEditing : {}),
+                  ...s.itemCard,
+                  borderLeftColor: color.border,
+                  ...(isThisEditing ? s.itemCardEditing : {}),
                 }}
               >
-                <div style={styles.itemInfo}>
-                  <p style={styles.itemName}>{item.name}</p>
-                  <p style={styles.itemMeta}>
-                    <span style={styles.badge}>{item.details.category}</span>
-                    Qty: <strong>{item.quantity}</strong>
-                  </p>
+                {/* Info */}
+                <div style={s.itemLeft}>
+                  <p style={s.itemName}>{item.name}</p>
+                  <div style={s.itemMetaRow}>
+                    <span
+                      style={{
+                        ...s.badge,
+                        background: color.bg,
+                        color: color.text,
+                      }}
+                    >
+                      {item.details.category}
+                    </span>
+                    <span style={s.qtyPill}>
+                      ×&nbsp;<strong>{item.quantity}</strong>
+                    </span>
+                  </div>
                   {item.details.notes && (
-                    <p style={styles.itemMeta}>📝 {item.details.notes}</p>
+                    <p style={s.noteText}>📝 {item.details.notes}</p>
                   )}
                 </div>
 
-                <div style={styles.itemActions}>
+                {/* Actions */}
+                <div style={s.itemActions}>
                   {!isThisEditing && (
-                    <button style={styles.btnEdit} onClick={() => handleEdit(item)}>
+                    <button
+                      className="sl-btn sl-btn-edit"
+                      style={{ padding: '6px 14px', fontSize: 13 }}
+                      onClick={() => handleEdit(item)}
+                    >
                       Edit
                     </button>
                   )}
-                  <button style={styles.btnDelete} onClick={() => handleDelete(item.id)}>
+                  <button
+                    className="sl-btn sl-btn-delete"
+                    style={{ padding: '6px 14px', fontSize: 13 }}
+                    onClick={() => handleDelete(item.id)}
+                  >
                     Delete
                   </button>
                 </div>
